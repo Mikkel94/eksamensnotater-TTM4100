@@ -40,3 +40,27 @@ $DevRTT = (1-\beta)\cdot DevRTT + \beta \cdot | SampleRTT - EstimatedRTT |$
 $TimeoutInterval=$ Time before TCP times out and resends segment
 
 $TimeoutInterval = EstimatedRTT + 4 \cdot DevRTT$
+
+**Graph**
+$G=$ graph
+$N=$ a set of nodes
+$E=$ a collection of edges
+
+$G=(N,E)$
+
+**Cyclic Redundancy Check (CRC)**
+$D=$ *d* bits of data to be sendt
+$G=r+1$ bit pattern (generator) (leftmost bit of $G$ must be a 1)
+$R=r$ bits chosen by sender
+$d+1$ is exactly divisible by G
+If remainder is nonzero, an error has occured
+
+How sender computes $R$:
+$R=remainder \frac{D\cdot2^r}{G}$
+
+**CSMA/CD Efficiency**
+$d_{prop}=$ maximum time it takes signal energy to propagate between two adapters
+$d_{trans}=$ time to transmit a maximum size frame between two adapters
+
+Efficiency $=\frac{1}{1+5d_{prop}/d_{trans}}$
+
