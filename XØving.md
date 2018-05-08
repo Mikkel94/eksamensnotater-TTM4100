@@ -457,4 +457,109 @@ In this chapter: How are forwarding and flow tables computed, maintained and ins
 * Cable access network - uses multiple access protocols
 
 **Switched Local Area Networks (Switched LANs)**
-*
+* Switch Link Layer frames
+* Dont recognize network layer addresses
+* Uses link layer addresses instead of IP addresses
+* **Link-Layer Addressing and ARP**
+    * Address Resolution Protocol (ARP) translates IP addresses to MAC addresses
+    * **MAC Addresses**
+        * Analogous to a persons SSN
+        * Opens only frames addressed to the specific adapters MAC address
+    * **Address Resolution Protocol (ARP)**
+        * Translates IP addresses into MAC addresses for a subnet
+        * Router broadcasts a ARP message to get MAC addresses on the subnet if it can't find the MAC address in its ARP table
+        * ARP tables are buildt (and destroyed) automatically
+        * ARP is in the "void" between Link-Layer and Network-Layer
+
+**Ethernet**
+* Original Ethernet used Coaxial bus to interconnect nodes.
+* Ethernet with a bus topology is a broadcast LAN
+* Hubs acts on bits instead of frames (boosts the signal of the bit and sends it to everyone)
+
+### Wireless and Mobile Networks
+
+**Introduction**
+* Following elements in a wireless network:
+    * Wireless hosts (laptops, smartphones, etc.)
+    * Wireless links (connection between wireless hosts/base station)
+    * Base station - coordinates transmission of multiple wireless hosts (f.ex. cell towers and access points), relays data between hosts and bigger networks
+    * Network infrastructure - The larger network which a wireless host may wish to communicate with
+* Two classifications of wireless networks:
+    * Single/multiple hops
+    * If there is infrastructure/base station
+
+**Wireless Links and Network Characteristics**
+* Differences between wired ethernet and a wireless 802.11 network, the link layer is what is changing
+* Differences:
+    * Decreasing signal strength (path loss when going through walls/distances/whatever)
+    * Interference from other sources
+    * Multipath propagation (portions of the electromagnetic wave reflects off of something, taking different lengths between sender/receiver)
+* Wireless link protocols employ both CRC codes and link-level reliable data transfer
+* Higher signal-to-noise ratio (SNR) -> Lower bit error rate (BER)
+* Higher transmission rate -> higher BER
+* **Hidden terminal problem** - because of physical obstructions signals are not always strong enough to detect each others transmissions, but are strong enough to interfere, therefore causing collisions
+
+**WiFi: 802.11 Wireless LANs**
+* 2.4Ghz (unlicensed), and 5Ghz (shorter transmission distance and more multipath propagation)
+* **The 802.11 Architecture**
+    * Fundamental building block: **base service set (BSS)**
+        * A BSS contains one or more wireless stations and a central base station aka **Access Point (AP)**
+    * Ad hoc network -> A network formed "on the fly" without a base station
+    * passive and active scanning
+    * centralized or decentralized authentication
+* **Carrier Sense Multiple Access with Collision Avoidance (CSMA/CA)**
+    * Collision avoidance, not detection
+    * also uses link-layer ACK/retransmissions
+    * It costs alot to build hardware that detects collisions
+    * because of hidden terminal problem, there would be many instances where it couldn't detect collisions
+    * Doesn't transmit once channe is idle, but waits a random $R$ amount of time (called: Distributed Inter-Frame Space (DIFS))
+* Request to send (RTS) and clear to send (CTS) to ask for permission to send and give permission to send, as to not get/get fewer collisions
+    * Only used for big frames (if at all) because of delays
+* Multiple BSS is possible on the same subnet without losing TCP connections because your wireless device scans for better signals when the original signal get worse, it may find another AP and connect to that. To handle this with the switch the new AP can send out a broadcast Ethernet frame with the source address/MAC address to the switch and everything is good (atleast for now)
+* **Rate adaptation**
+    * Transmission rate goes up/down depending on how often BERs occurs
+* Nodes sleep to save power, are waken up right before beacons
+
+**Cellular Internet Access**
+* **Global System for Mobile Communications (GSM)**
+    * 1G, 2G, 3G, 4G
+* Base Station System(BSS) consists of multiple Base Tranceiver Stations(BTS) and a Base Station Controller (BSC) to controll them all
+* GSM standard for 2G cellular systems uses combined FDM/TDM
+* Mobile Switching Centers (MSC) handle authentication and accounting of multiple BSCs
+* **3G Network**
+    * Adds additional cellular data functionality on top of GSM cellular voice network
+    * Integrating into the core of GSM would raise the same challenges as with integrating IPv6 into IPv4
+    * **Two types of Nodes in a 3G core network**
+        * First: GPRS = Generalized Packet Radio Service
+        * **Serving GPRS Support Nodes (SGSN)**
+            * Delivers datagrams to/from mobile nodes
+        * **Gateway GPRS Supoort Nodes(GGSN)**
+            * Connects multiple SGSNs together, looks like a normal router from the outside world
+    * Share Radio Network Controller (RNC) with cellular voice services
+    * Also share common first/last-hop radio access network
+* **4G**
+    * All-IP core network and enhanced radio access network
+    * **Important high-level observations about the 4G architechture**
+        * **A unified, all-IP network architecture**
+            * Both voice and data are carried in IP datagrams to/from User Equipment (UE) to the Packet Gateway (P-GW) that connects the 4G edge network to the rest of the network
+        * **A clear separation of the 4G data plane and 4G control plane**
+            * Like in the Network layer for wireless and wired ethernet, 4G separtes data and control plane
+        * **A clear separation between the radio access network, and the all-IP-core network**
+    * **Principal components of 4G architecture**
+        * **eNodeB**
+            * Forwards datagrams between UE and the P-GW
+            * UE datagrams are encapsulated at the eNodeB and tunneled to the P-GW through the 4G networks all-IP enhanced packet core (EPC)
+        * **Packet Data Network Gateway (P-GW)**
+            * Allocates IP addresses to the UEs
+            * Performs QoS enforcement
+            * Performs datagram encapsulation/decapsulation when forwarding datagrams to/from UEs
+        * **Serving Gateway (S-GW)**
+            * All UE traffic pass through the S-GW. The S-GW also performs charing/billing functions and lawful traffic interception
+        * **Mobility Management Entity (MME)**
+            * Performs connection and mobility management for UEs in the cell it controls (keeps shit connected, like with multiple BSSs in 802.11, but with this i think you can change subnets without being disconnected from your TCP connection)
+            * It receives subscription information from HSS so that it can keep you connected
+        * **The Home Subscriber Server (HSS)**
+            * Contains UE information about QoS profiles, and authentication etc.
+
+### Security in Computer Networks
+
